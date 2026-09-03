@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 import { useQuery } from "@apollo/client/react";
-import AuthorsBirthday from "./AuthorsBirthday";
+import AuthorsBirthday from "./AuthorsBirthDay";
 
 const ALL_AUTHORS = gql`
   query {
@@ -15,15 +15,16 @@ const ALL_AUTHORS = gql`
 
 const Authors = (props) => {
   const result = useQuery(ALL_AUTHORS);
-  //console.log("===AUTHORS===", result.data);
-  if (result.loading) {
-    return <div>Loading . . .</div>;
-  }
+  console.log("===AUTHORS===", result);
 
   if (!props.show) {
     return null;
   }
   //const authors = [];
+
+  if (result.loading) {
+    return <div>Loading . . .</div>;
+  }
 
   return (
     <div>

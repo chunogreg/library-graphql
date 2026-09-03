@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useMutation } from "@apollo/client/react";
+import { useMutation, useQuery } from "@apollo/client/react";
 import { gql } from "@apollo/client";
 
 const ADD_BIRTHDAY = gql`
-  mutation addBirthday($name: String!, $setBornTo: String) {
+  mutation addBirthday($name: String!, $setBornTo: Int) {
     editAuthor(name: $name, setBornTo: $setBornTo) {
       name
       born
@@ -12,19 +12,24 @@ const ADD_BIRTHDAY = gql`
   }
 `;
 
+const ALL_AUTHORS = gql`
+  query {
+    allAuthors {
+      name
+      id
+      born
+      bookCount
+    }
+  }
+`;
+
 const AuthorsBirthday = () => {
-  const [name, setName] = useState(null);
+  const [name, setName] = useState("");
   const [setBornTo, setBorn] = useState("");
 
-  const [addBirthday] = useMutation(
-    ADD_BIRTHDAY,
+  const [addBirthday] = useMutation(ADD_BIRTHDAY);
 
-    {
-      onError: (error) => {
-        console.log("CREATE BOOK ERROR:", error);
-      },
-    },
-  );
+  const result = useQuery(ALL_AUTHORS);
 
   const submit = async (event) => {
     event.preventDefault();
@@ -54,18 +59,18 @@ const AuthorsBirthday = () => {
             }}
           >
             <option value="">Select author</option>
-            <option value="Robert Martin">Robert Martin</option>
-            <option value="Martin Fowler">Martin Fowler</option>
-            <option value="Fyodor Dostoevsky">Fyodor Dostoevsky</option>
-            <option value="Joshua Kerievsky">Joshua Kerievsky</option>
-            <option value="Sandi Metz">Sandi Metz</option>
+            {result.data.allAuthors.map((author) => (
+              <option key={author.id} value={author.name}>
+                {author.name}
+              </option>
+            ))}
           </select>
         </div>
         <div>
           born
           <input
             value={setBornTo}
-            onChange={({ target }) => setBorn(target.value)}
+            onChange={({ target }) => setBorn(parseInt(target.value))}
           />
         </div>
 

@@ -5,7 +5,7 @@ import { gql } from "@apollo/client";
 const ADD_BOOK = gql`
   mutation createBook(
     $title: String!
-    $published: String!
+    $published: Int!
     $author: String!
     $genres: [String!]!
   ) {
@@ -17,7 +17,11 @@ const ADD_BOOK = gql`
     ) {
       title
       published
-      author
+      author {
+        name
+        born
+        bookCount
+      }
       genres
     }
   }
@@ -81,7 +85,7 @@ const NewBook = (props) => {
           <input
             type="number"
             value={published}
-            onChange={({ target }) => setPublished(target.value)}
+            onChange={({ target }) => setPublished(parseInt(target.value))}
           />
         </div>
         <div>
