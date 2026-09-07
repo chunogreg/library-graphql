@@ -9,7 +9,6 @@ import Recommendation from "./components/Recommendation";
 const App = () => {
   const [page, setPage] = useState("");
   const [token, setToken] = useState(localStorage.getItem("loggedInUser"));
-  // const [errorMsg, setErrorMsg] = useState(null)
 
   const client = useApolloClient();
 
