@@ -15,15 +15,15 @@ const ALL_AUTHORS = gql`
 
 const Authors = (props) => {
   const result = useQuery(ALL_AUTHORS);
-  console.log("===AUTHORS===", result);
 
-  if (!props.show) {
-    return null;
-  }
   //const authors = [];
 
   if (result.loading) {
     return <div>Loading . . .</div>;
+  }
+
+  if (!props.show) {
+    return null;
   }
 
   return (

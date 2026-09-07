@@ -12,7 +12,7 @@ const resolvers = {
 
     allBooks: async (root, args) => {
       if (args.genre) {
-        return await Book.find({ genres: args.genre });
+        return await Book.find({ genres: args.genre }).populate("author");
       }
       if (args.author) {
         const author = await Author.findOne({ name: args.author });
@@ -124,6 +124,7 @@ const resolvers = {
         });
       }
       const userForToken = { username: user.username, id: user._id };
+      console.log(" ==SUCCESSFUL LOGIN==");
 
       return { value: jwt.sign(userForToken, process.env.JWT_SECRET) };
     },

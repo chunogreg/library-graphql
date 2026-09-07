@@ -26,6 +26,7 @@ const ALL_AUTHORS = gql`
 const AuthorsBirthday = () => {
   const [name, setName] = useState("");
   const [setBornTo, setBorn] = useState("");
+  const [token] = useState(localStorage.getItem("loggedInUser"));
 
   const [addBirthday] = useMutation(ADD_BIRTHDAY);
 
@@ -41,6 +42,8 @@ const AuthorsBirthday = () => {
     setName("");
     setBorn("");
   };
+
+  if (!token) return null;
 
   return (
     <div>
