@@ -48,7 +48,7 @@ const AuthorsBirthday = () => {
   return (
     <div>
       <form onSubmit={submit}>
-        <h2>Set birthday</h2>
+        <h2>Set birthyear</h2>
         <div>
           name
           {/* <input
@@ -57,6 +57,7 @@ const AuthorsBirthday = () => {
           /> */}
           <select
             value={name}
+            name="name"
             onChange={(e) => {
               setName(e.target.value);
             }}
@@ -70,11 +71,13 @@ const AuthorsBirthday = () => {
           </select>
         </div>
         <div>
-          born
-          <input
-            value={setBornTo}
-            onChange={({ target }) => setBorn(parseInt(target.value))}
-          />
+          <label>
+            born
+            <input
+              value={setBornTo}
+              onChange={({ target }) => setBorn(parseInt(target.value))}
+            />
+          </label>
         </div>
 
         <div>

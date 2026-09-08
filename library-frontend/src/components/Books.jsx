@@ -4,8 +4,11 @@ import { useState } from "react";
 import { ALL_BOOKS } from "../queries";
 
 const Books = (props) => {
-  const [myGenre, setMyGenre] = useState(null);
-  const result = useQuery(ALL_BOOKS, { variables: { genre: myGenre } });
+  const [myGenre, setMyGenre] = useState("");
+  const result = useQuery(ALL_BOOKS, {
+    variables: { genre: myGenre },
+    // fetchPolicy: "network-only",
+  });
   //const [bookArray, setBookArray] = useState([]);
 
   if (result.loading) {
@@ -65,7 +68,6 @@ const Books = (props) => {
               ))} */}
       {/* </tbody>
       </table> */}
-
       {/* <div>
         <br />
         {genres.map((g) => (
@@ -73,11 +75,10 @@ const Books = (props) => {
         ))}
         <button onClick={() => handleFiltered("all")}>all genres</button>
       </div> */}
-
       <table>
         <tbody>
           <tr>
-            <th></th>
+            <th>in genre</th>
             <th>author</th>
             <th>published</th>
           </tr>
@@ -91,7 +92,6 @@ const Books = (props) => {
           ))}
         </tbody>
       </table>
-
       <div>
         <br />
         {genres.map((g) => (
@@ -99,7 +99,7 @@ const Books = (props) => {
             {g}
           </button>
         ))}
-        <button onClick={() => setMyGenre(null)}>all genres</button>
+        <button onClick={() => setMyGenre("")}>all genres</button>
       </div>
     </div>
   );
