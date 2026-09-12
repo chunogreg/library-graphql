@@ -6,13 +6,14 @@ import LoginForm from "./components/LoginForm";
 import { useApolloClient } from "@apollo/client/react";
 import Recommendation from "./components/Recommendation";
 import Notification from "./components/Notification";
+//import { BOOK_ADDED } from "./queries";
 
 const App = () => {
   const [page, setPage] = useState("authors");
   const [token, setToken] = useState(localStorage.getItem("loggedInUser"));
   const [errorMsg, setErrorMsg] = useState(null);
 
-  console.log("== LOGIN ERROR ==", errorMsg);
+  //console.log("== LOGIN ERROR ==", errorMsg);
 
   const client = useApolloClient();
 
@@ -26,7 +27,7 @@ const App = () => {
     setErrorMsg(message);
     setTimeout(() => {
       setErrorMsg(null);
-    }, 12000);
+    }, 9000);
   };
 
   if (!token) {
@@ -60,6 +61,8 @@ const App = () => {
 
         <button onClick={onLogout}>logout</button>
       </div>
+
+      <Notification errorMsg={errorMsg} />
 
       <Authors show={page === "authors"} />
 

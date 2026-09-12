@@ -1,9 +1,12 @@
-const { GraphQLError } = require("graphql");
+const { GraphQLError, subscribe } = require("graphql");
 //const { v1: uuid } = require("uuid");
 const Book = require("./models/book");
 const Author = require("./models/author");
 const User = require("./models/user");
+const { PubSub } = require("graphql-subscriptions");
 const jwt = require("jsonwebtoken");
+
+const pubsub = new PubSub();
 
 const resolvers = {
   Query: {
@@ -22,8 +25,13 @@ const resolvers = {
     },
 
     allAuthors: async () => {
-      return await Author.find({});
+      console.log("Author.find");
+      return await Author.find({}).populate("books");
     },
+
+    // allAuthors: async () => {
+    //   return await Author.find({});
+    // },
 
     me: (root, args, context) => {
       return context.currentUser;
@@ -31,8 +39,9 @@ const resolvers = {
   },
   Author: {
     bookCount: async (author) => {
-      const books = await Book.find({ author: author._id });
-      return books.length;
+      // const books = await Book.find({ author: author._id });
+      // return books.length;
+      return author.books ? author.books.length : 0;
     },
   },
 
@@ -80,6 +89,15 @@ const resolvers = {
         genres: args.genres,
       });
       const savedBook = await book.save();
+      author.books = author.books.concat(savedBook._id);
+      await author.save();
+
+      const populatedBook = savedBook.populate("author");
+      pubsub.publish("BOOK_ADDED", {
+        bookAdded: populatedBook,
+      });
+
+      //const savedBook = await book.save();
       return savedBook.populate("author");
     },
 
@@ -136,6 +154,11 @@ const resolvers = {
       await Book.deleteMany({});
       await Author.deleteMany({});
       return true;
+    },
+  },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterableIterator("BOOK_ADDED"),
     },
   },
 };

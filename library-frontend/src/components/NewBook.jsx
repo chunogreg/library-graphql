@@ -1,7 +1,12 @@
 import { useState } from "react";
-import { useMutation } from "@apollo/client/react";
+import {
+  useMutation,
+  useSubscription,
+  useApolloClient,
+} from "@apollo/client/react";
 import { ADD_BOOK, ALL_BOOKS } from "../queries";
-//import { ALL_BOOKS } from "../queries";
+import { BOOK_ADDED } from "../queries";
+import { addBookToCache } from "../utils/apolloCache";
 
 const NewBook = ({ setError, show }) => {
   const [title, setTitle] = useState("");
@@ -10,18 +15,28 @@ const NewBook = ({ setError, show }) => {
   const [genre, setGenre] = useState("");
   const [genres, setGenres] = useState([]);
 
+  const client = useApolloClient();
+
   const [createBook] = useMutation(ADD_BOOK, {
-    onError: (error) => setError(error.message),
-    update: (cache, response) => {
-      cache.updateQuery(
-        { query: ALL_BOOKS, variables: { genre: "" } },
-        ({ allBooks }) => {
-          return { allBooks: allBooks.concat(response.data.addBook) };
-        },
-      );
+    onError: (error) => {
+      setError(error.message);
     },
+    update: (cache, response) => {
+      const addedBook = response.data.addBook;
+      addBookToCache(cache, addedBook);
+    },
+
     // refetchQueries: [{ query: ALL_BOOKS } ],
     // refetchQueries: ["ALL_BOOKS"],
+  });
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data }) => {
+      const addedBook = data.data.bookAdded;
+      console.log("== BOOK ADDED ==", addedBook);
+      setError(`${addedBook.title} added`);
+      addBookToCache(client.cache, addedBook);
+    },
   });
 
   if (!show) {
@@ -31,7 +46,11 @@ const NewBook = ({ setError, show }) => {
   const submit = async (event) => {
     event.preventDefault();
 
-    createBook({ variables: { title, published, author, genres } });
+    try {
+      await createBook({ variables: { title, published, author, genres } });
+    } catch (error) {
+      setError(error.message);
+    }
 
     console.log("add book...");
 

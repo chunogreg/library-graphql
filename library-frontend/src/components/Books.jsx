@@ -7,7 +7,6 @@ const Books = (props) => {
   const [myGenre, setMyGenre] = useState("");
   const result = useQuery(ALL_BOOKS, {
     variables: { genre: myGenre },
-    // fetchPolicy: "network-only",
   });
   //const [bookArray, setBookArray] = useState([]);
 
@@ -39,6 +38,7 @@ const Books = (props) => {
     "design",
     "patterns",
     "crime",
+    "revolution",
   ];
   return (
     <div>

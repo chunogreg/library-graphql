@@ -3,8 +3,8 @@ const Notification = ({ errorMsg }) => {
   return (
     <div
       style={{
-        backgroundColor: "#f5dfdc",
-        border: "2px solid #843508",
+        backgroundColor: "#f5efca",
+        border: "2px solid #766f05",
         fontSize: 18,
         paddingLeft: 55,
       }}
