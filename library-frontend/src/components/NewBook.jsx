@@ -34,7 +34,8 @@ const NewBook = ({ setError, show }) => {
     onData: ({ data }) => {
       const addedBook = data.data.bookAdded;
       console.log("== BOOK ADDED ==", addedBook);
-      setError(`${addedBook.title} added`);
+      //setError(`${addedBook.title} added`);
+      setError("Book added successfully");
       addBookToCache(client.cache, addedBook);
     },
   });

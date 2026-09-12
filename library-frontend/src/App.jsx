@@ -27,7 +27,7 @@ const App = () => {
     setErrorMsg(message);
     setTimeout(() => {
       setErrorMsg(null);
-    }, 9000);
+    }, 5000);
   };
 
   if (!token) {
